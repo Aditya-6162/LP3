@@ -1,35 +1,64 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract StudentData {
-    // Structure to store student details
-    struct Student {
-        uint256 id;
+contract StudentData{
+
+    // create structure for student data
+    struct Student{
         string name;
-        string department;
+        uint256 rollNo;
     }
 
-    // Dynamic array of students
-    Student[] public students;
+    //create array
+    Student[] public studentarr;
 
-    // Add student details
-    function addStudent(uint256 _id, string memory _name, string memory _dept) external {
-        students.push(Student(_id, _name, _dept));
-    }
-
-    // Get student details by ID
-    function getStudent(uint256 _id) external view returns (string memory, string memory) {
-        for (uint i = 0; i < students.length; i++) {
-            if (students[i].id == _id) {
-                return (students[i].name, students[i].department);
+    //function to add students in array
+    function addStudent(string memory name, uint rollNo) public {
+        for(uint i = 0; i < studentarr.length;i++)
+        {
+            if (studentarr[i].rollNo == rollNo){
+                revert("Student with this roll Number is already exist");
             }
         }
-        return ("Not Found", "Not Found");
+        studentarr.push(Student(name,rollNo));
+
+    }
+    //function to get student by its rollno
+    function getstudent(uint rollNo) public view returns(string memory){
+        for(uint i = 0; i < studentarr.length;i++)
+        {
+            Student memory stud = studentarr[i];
+            if(rollNo == stud.rollNo)
+            {
+                return (studentarr[i].name);
+
+            }
+        
+
+        }
+        return ("Not found!!");
     }
 
-    // Fallback function (required by problem)
-    fallback() external payable {}
+    function getstudentlength() public view returns(uint){
+        return studentarr.length;
+    }
 
-    // Receive function (accepts Ether if sent)
-    receive() external payable {}
+    function getAllstudent() public view returns(Student[] memory){
+        return studentarr;
+
+    }
+    function getstudentByIndex(uint idx) public view returns(Student memory){
+        require(idx < studentarr.length,"idex is out of bound!");
+        return studentarr[idx];
+    }
+
+    //fallback
+    fallback() external  payable { 
+
+    }
+    
+    receive() external payable { 
+
+    }
+
 }
