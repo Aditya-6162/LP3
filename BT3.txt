@@ -1,27 +1,37 @@
-// SPDX-License-Identifier: MIT
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract BankAccount {
-    // stores ether balance for each user
-    mapping(address => uint256) private balances;
+contract bank{
 
-    // Deposit money  (attach some Ether in "Value" box)
-    function deposit() external payable {
-        require(msg.value > 0, "Deposit must be > 0");
-        balances[msg.sender] += msg.value;
+    uint256 balance = 0;
+    address public accOwner;
+
+    constructor() {
+        accOwner = msg.sender;
     }
 
-    // Withdraw money (enter amount in wei)
-    function withdraw(uint256 amount) external {
-        require(amount > 0, "Amount must be > 0");
-        require(balances[msg.sender] >= amount, "Insufficient balance");
-        balances[msg.sender] -= amount;
-        (bool sent, ) = payable(msg.sender).call{value: amount}("");
-        require(sent, "Transfer failed");
-    }
 
-    // Show your balance (in wei)
-    function showBalance() external view returns (uint256) {
-        return balances[msg.sender];
+    //function for money deposit
+    function deposit() public payable{
+
+        require(accOwner== msg.sender,"YOur are not the owner of this account");
+        require(msg.value >0,"you cannnot deposit 0 money ");
+        balance += msg.value;
+    } 
+
+    //fuuction for widrawal money 
+    function widraw() public payable {
+         require(accOwner== msg.sender,"YOur are not the owner of this account");
+         require(msg.value >0,"you cannnot Widraw 0 unit ");
+         balance-=msg.value;
+
+
+    }
+    //function for showing balancce
+
+    function showbalance() public view returns(uint256){
+
+         require(accOwner== msg.sender,"YOur are not the owner of this account");
+         return balance;
     }
 }
